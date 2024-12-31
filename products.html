@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Catalog - Inventory Management</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .products-container {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .product-price {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stock-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .in-stock {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .low-stock {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .out-of-stock {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .action-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-btn {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .edit-btn:hover {
+            background-color: #bbdefb;
+        }
+
+        .delete-btn {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .delete-btn:hover {
+            background-color: #ffcdd2;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalPopIn 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes modalPopIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .modal h2 {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            background-color: #f8f9fa;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background-color: #fff;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Add New Product</h2>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Price ($)</label>
+                    <input type="number" id="productPrice" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="productStock">Stock Quantity</label>
+                    <input type="number" id="productStock" required>
+                </div>
+                <div class="form-group">
+                    <label for="productImage">Image URL</label>
+                    <input type="url" id="productImage" required>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Category</label>
+                    <select id="productCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="accessories">Accessories</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Add Product</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fas fa-boxes"></i>
+                <span>Inventory Pro</span>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="dashboard.html"><i class="fas fa-home"></i>Dashboard</a>
+                </li>
+                <li class="active">
+                    <a href="products.html"><i class="fas fa-box"></i>Products</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-exchange-alt"></i>Transactions</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-users"></i>Suppliers</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-chart-bar"></i>Reports</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-cog"></i>Settings</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search products...">
+                </div>
+                <button class="add-product-btn" onclick="openModal()">
+                    <i class="fas fa-plus"></i> Add New Product
+                </button>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </div>
+                    <img src="https://via.placeholder.com/40" alt="User Profile" class="profile-pic">
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-container">
+                <!-- Product Card 1 -->
+                <div class="product-card">
+                    <img src="dell.jpg" alt="Laptop" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">Dell XPS 13 Laptop</div>
+                        <div class="product-description">13-inch laptop with Intel i7, 16GB RAM, 512GB SSD</div>
+                        <div class="product-meta">
+                            <span class="product-price">₹ 1,54,990</span>
+                            <span class="stock-status in-stock">In Stock (15)</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-button edit-btn">Edit</button>
+                            <button class="action-button delete-btn">Delete</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="product-card">
+                    <img src="iphone15.jpg" alt="Smartphone" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">iPhone 15 Pro</div>
+                        <div class="product-description">256GB, Graphite, 5G Enabled</div>
+                        <div class="product-meta">
+                            <span class="product-price">₹ 1,44,990</span>
+                            <span class="stock-status low-stock">Low Stock (3)</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-button edit-btn">Edit</button>
+                            <button class="action-button delete-btn">Delete</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="product-card">
+                    <img src="headphones.jpg" alt="Headphones" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">Sony WH-1000XM4</div>
+                        <div class="product-description">Wireless Noise Cancelling Headphones</div>
+                        <div class="product-meta">
+                            <span class="product-price">₹ 24,980</span>
+                            <span class="stock-status out-of-stock">Out of Stock</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-button edit-btn">Edit</button>
+                            <button class="action-button delete-btn">Delete</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 4 -->
+                <div class="product-card">
+                    <img src="applewatch.jpg" alt="Smart Watch" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">Apple Watch Series 7</div>
+                        <div class="product-description">GPS + Cellular, 45mm Aluminum Case</div>
+                        <div class="product-meta">
+                            <span class="product-price">₹ 30,279</span>
+                            <span class="stock-status in-stock">In Stock (8)</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="action-button edit-btn">Edit</button>
+                            <button class="action-button delete-btn">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        // Modal functionality
+        const modal = document.getElementById('addProductModal');
+        const closeBtn = document.querySelector('.close-modal');
+        const addProductForm = document.getElementById('addProductForm');
+
+        function openModal() {
+            modal.style.display = 'flex';  
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking the close button or outside the modal
+        closeBtn.onclick = closeModal;
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Handle form submission
+        addProductForm.onsubmit = function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const product = {
+                name: document.getElementById('productName').value,
+                description: document.getElementById('productDescription').value,
+                price: document.getElementById('productPrice').value,
+                stock: document.getElementById('productStock').value,
+                image: document.getElementById('productImage').value,
+                category: document.getElementById('productCategory').value
+            };
+
+            // Here you would typically send this data to your backend
+            console.log('New product data:', product);
+
+            // Create new product card
+            const productCard = createProductCard(product);
+            document.querySelector('.products-container').appendChild(productCard);
+
+            // Reset form and close modal
+            addProductForm.reset();
+            closeModal();
+        }
+
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            
+            const stockStatus = product.stock > 10 ? 'in-stock' : 
+                              product.stock > 0 ? 'low-stock' : 
+                              'out-of-stock';
+            
+            const stockText = product.stock > 0 ? 
+                            `${stockStatus === 'in-stock' ? 'In Stock' : 'Low Stock'} (${product.stock})` : 
+                            'Out of Stock';
+
+            card.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" class="product-image">
+                <div class="product-info">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-description">${product.description}</div>
+                    <div class="product-meta">
+                        <span class="product-price">$${parseFloat(product.price).toFixed(2)}</span>
+                        <span class="stock-status ${stockStatus}">${stockText}</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="action-button edit-btn">Edit</button>
+                        <button class="action-button delete-btn">Delete</button>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+    </script>
+</body>
+</html>

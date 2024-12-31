@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fas fa-boxes"></i>
+                <span>Inventory Pro</span>
+            </div>
+            <ul class="nav-links">
+                <li class="active">
+                    <a href="#"><i class="fas fa-home"></i>Dashboard</a>
+                </li>
+                <li>
+                    
+                    <a href="products.html"><i class="fas fa-box"></i>Products</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-exchange-alt"></i>Transactions</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-users"></i>Suppliers</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-chart-bar"></i>Reports</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-cog"></i>Settings</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <img src="priya.jpg" alt="Profile" class="profile-img">
+                    <span>Supriya</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Stats Cards -->
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(255, 99, 132, 0.2);">
+                            <i class="fas fa-box" style="color: #ff6384;"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Total Products</h3>
+                            <p class="stat-number">2,547</p>
+                            <span class="stat-change positive">+12.5%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(54, 162, 235, 0.2);">
+                            <i class="fas fa-dollar-sign" style="color: #36a2eb;"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Total Value</h3>
+                            <p class="stat-number">$154,275</p>
+                            <span class="stat-change positive">+8.2%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(255, 159, 64, 0.2);">
+                            <i class="fas fa-exclamation-triangle" style="color: #ff9f40;"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Low Stock</h3>
+                            <p class="stat-number">12</p>
+                            <span class="stat-change negative">+3</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(75, 192, 192, 0.2);">
+                            <i class="fas fa-sync" style="color: #4bc0c0;"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Pending Orders</h3>
+                            <p class="stat-number">25</p>
+                            <span class="stat-change neutral">0</span>
+                        </div>
+                    </div>
+                </div>
+
+            
+
+                <!-- Recent Activity -->
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon received">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="activity-details">
+                                <h4>Stock Received</h4>
+                                <p>100 units of Product A received from Supplier X</p>
+                                <span class="activity-time">2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon shipped">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            <div class="activity-details">
+                                <h4>Order Shipped</h4>
+                                <p>50 units shipped to Customer Y</p>
+                                <span class="activity-time">4 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon alert">
+                                <i class="fas fa-exclamation"></i>
+                            </div>
+                            <div class="activity-details">
+                                <h4>Low Stock Alert</h4>
+                                <p>Product B is running low on stock</p>
+                                <span class="activity-time">6 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html>
